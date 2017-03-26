@@ -37,6 +37,7 @@ namespace SignalRUserNotify.Controllers
                     if (isFromConsole == "0" && !client.ContainsKey(Context.ConnectionId)) // client(Redis)'de ilgili connection yok..
                     {
                         //Eğer Önceden eklenmiş Listede Yok ise
+                        //Liste yapmadan amaç önceden bu kayıt var ve Sayfayı Refresh yapmış ise önceki connectionID'sini Redisden yenileyebilmek.
                         if (!PersonList.HasSession(sessionID))
                         {
                             DateTime sessionExpireDate = DateTime.Now.AddMinutes(section.Timeout.TotalMinutes);
