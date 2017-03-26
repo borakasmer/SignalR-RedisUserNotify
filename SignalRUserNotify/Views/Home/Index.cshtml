@@ -1,0 +1,53 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="~/scripts/jquery-3.1.1.min.js"></script>
+    <script src="~/scripts/jquery.signalR-2.2.1.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/Content/alert.css" rel="stylesheet" />
+    <title>Index</title>
+
+    <script>
+        var hubProxy = $.connection.session;
+        $.connection.hub.logging = true;
+        $.connection.hub.qs = "console=0&sessionID=@ViewBag.SessionID";
+        $.connection.hub.start().done(function () {
+            console.log("hub.start.done");
+        }).fail(function (error) {
+            console.log(error);
+        });
+
+        hubProxy.client.notifySession = function (message) {
+            $('#hdnConnectionID').val(message.split(":")[0]);
+            console.log(message);
+        };        
+        hubProxy.client.notifyUser = function (message) {   
+            $('#messageSpan').text(message);
+            $('.alert').css('display', 'inline-block');
+        };
+
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h2>SignalR Session Notify Page</h2>
+            <div class="alert" style="display:none">
+                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                <strong>Uyarı!</strong><span id="messageSpan"></span>
+            </div>
+        </div> 
+        <input type="hidden" id="hdnConnectionID" />
+        <input type="hidden" id="hdnSessionID" value="@ViewBag.SessionID">
+    </div>
+</body>
+</html>
